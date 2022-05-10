@@ -16,6 +16,6 @@ dir <-
 dir <- "/Users/Abi/Documents/GitHub/PsMetricsIV"
 dir <-
 
-
 setwd(dir)
 
+data <- read_dta("cuarto_trim_2019.dta")
