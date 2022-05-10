@@ -18,15 +18,25 @@ dir <-
 
 setwd(dir)
 
+
+
+library(haven)
+data <- read_dta("https://econometriaudesa.weebly.com/uploads/1/3/6/3/136372338/cuarto_trim_2019.dta")
 data <- read_dta("cuarto_trim_2019.dta")
 
 
 #### Punto 2 ####
 
-myprobit <- glm(deserta ~ +  + , family = binomial(link = "probit"), 
-                data = data)
+library(fastDummies)
+
+data_d <- dummy_cols(data, select_columns = "ch11")
 
 
+myprobit <- glm(deserta ~ mujer + educ_jefe + hermanos + ingreso_per_capita + jmujer +
+                  ch11_0 + ch11_1 + ch11_9 , family = binomial(link = "probit"), 
+                data = data_d)
+
+summary(myprobit)
 
 #### Punto 3 #### 
 
