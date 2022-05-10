@@ -150,63 +150,73 @@ stargazer(desercion_probit_robust, desercion_mlp_robust, type='text',
 # Generamos las bases de datos 
 
 
-ingreso <- seq(0,100000,1)
+ingreso <- seq(0,100000,100)
 k <- length(ingreso)
 
 
-pred_probit6 <- predict(probit, newdata = data.frame(mujer=rep(1,k),
+pred_mujer <- predict(desercion_probit, newdata = data.frame(mujer=rep(1,k),
                                                      educ_jefe= rep(mean(data_d$educ_jefe), k),
                                                      hermanos = rep(mean(data_d$hermanos), k),
                                                      ingreso_per_capita=ingreso,
                                                      jmujer= rep(1,k),
-                                                     ch11_0= newpast6089,
-                                                     dayslate.90=rep(mean(dayslate.90),k),
-                                                     realestate=rep(mean(realestate),k),
-                                                     debt=rep(mean(debt),k),
-                                                     income=rep(mean(income),k)),
-                        type="response")
+                                                     ch11_0= rep(1,k),
+                                                     ch11_1=rep(0,k),
+                                                     ch11_9=rep(0,k), type="response"))
+
+pred_hombre <- predict(desercion_probit, newdata = data.frame(mujer=rep(0,k),
+                                                             educ_jefe= rep(mean(data_d$educ_jefe), k),
+                                                             hermanos = rep(mean(data_d$hermanos), k),
+                                                             ingreso_per_capita=ingreso,
+                                                             jmujer= rep(1,k),
+                                                             ch11_0= rep(1,k),
+                                                             ch11_1=rep(0,k),
+                                                             ch11_9=rep(0,k), type="response"))
 
 
 
-mujer_jm <- with(data, data.frame(mujer = (data_d$mujer=1), educ_jefe = mean(data_d$educ_jefe), 
-                                     hermanos = mean(data_d$hermanos), ingreso_per_capita = (data_d$ingreso_per_capita), 
-                                     jmujer = (data_d$jmujer=1), ch11_0 = (data_d$ch11_0=1), ch11_1 = (data_d$ch11_1=0), ch11_9 = (data_d$ch11_9=0))) 
+pred_jm <- predict(desercion_probit, newdata = data.frame(mujer=rep(1,k),
+                                                           educ_jefe= rep(mean(data_d$educ_jefe), k),
+                                                           hermanos = rep(mean(data_d$hermanos), k),
+                                                           ingreso_per_capita=ingreso,
+                                                           jmujer= rep(1,k),
+                                                           ch11_0= rep(1,k),
+                                                           ch11_1=rep(0,k),
+                                                           ch11_9=rep(0,k), type="response"))
 
 
+pred_jh <- predict(desercion_probit, newdata = data.frame(mujer=rep(1,k),
+                                                       educ_jefe= rep(mean(data_d$educ_jefe), k),
+                                                       hermanos = rep(mean(data_d$hermanos), k),
+                                                       ingreso_per_capita=ingreso,
+                                                       jmujer= rep(0,k),
+                                                       ch11_0= rep(1,k),
+                                                       ch11_1=rep(0,k),
+                                                       ch11_9=rep(0,k), type="response"))
 
 
-hombre_jm <- with(data, data.frame(mujer = (data_d$mujer=0), educ_jefe = mean(data_d$educ_jefe), 
-                                   hermanos = mean(data_d$hermanos), ingreso_per_capita = mean(data_d$ingreso_per_capita), 
-                                   jmujer = (data_d$jmujer=1), ch11_0 = (data_d$ch11_0=1), ch11_1 = (data_d$ch11_1=0), ch11_9 = (data_d$ch11_9=0))) 
+# Guardamos todo en la misma base de datos 
 
-
-mujer_jh <- with(data, data.frame(mujer = (data_d$mujer=1), educ_jefe = mean(data_d$educ_jefe), 
-                               hermanos = mean(data_d$hermanos), ingreso_per_capita = mean(data_d$ingreso_per_capita), 
-                               jmujer = (data_d$jmujer=0), ch11_0 = (data_d$ch11_0=1), ch11_1 = (data_d$ch11_1=0), ch11_9 = (data_d$ch11_9=0))) 
-
-hombre_jh <- with(data, data.frame(mujer = (data_d$mujer=0), educ_jefe = mean(data_d$educ_jefe), 
-                                hermanos = mean(data_d$hermanos), ingreso_per_capita = mean(data_d$ingreso_per_capita), 
-                                jmujer = (data_d$jmujer=0), ch11_0 = (data_d$ch11_0=1), ch11_1 = (data_d$ch11_1=0), ch11_9 = (data_d$ch11_9=0))) 
-
-
-
-
-# Realizamos las predicciones 
-
-pred_mujer_jm <-  predict(desercion_mlp, mujer_jm, type="response")
-          
-pred_hombre_jm <- predict(desercion_mlp, hombre_jm, type="response")
-
-pred_mujer_jh <-  predict(desercion_mlp, mujer_jh, type="response")
-
-pred_hombre_jh <- predict(desercion_mlp, hombre_jh, type="response")
-
+df_final <- data.frame(
+  pred_jm, pred_jh, pred_hombre, pred_mujer)
 
 # Graficamos 
 
 
-ggplot(pred_mujer_jm) +
-  geom_line(aes(x = ln_ing, y = mujer_jm), size = 1.5) +
+ggplot(aes(x = ingreso, y = pred_jm), data = df_final) + 
+  geom_line(aes(x=ingreso, y = pred_jh), col = "burlywood2", size = 1) +
+  geom_line(aes(x = ingreso, y = pred_jm), col = "azure3", size = 1) +
+  ggtitle("") +
+  xlab("Ingreso per capita")+
+  ylab("Predicción")+
+  theme_bw()
+
+
+ggplot(aes(x = ingreso, y = pred_mujer), data = df_final) + 
+  geom_line(aes(x=ingreso, y = pred_mujer), col = "burlywood2", size = 1) +
+  geom_line(aes(x = ingreso, y = pred_hombre), col = "azure3", size = 1) +
+  ggtitle("") +
+  xlab("Ingreso per capita")+
+  ylab("Predicción")+
   theme_bw()
 
 
