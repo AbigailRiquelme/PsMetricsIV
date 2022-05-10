@@ -39,7 +39,7 @@ data_d <- dummy_cols(data, select_columns = "ch11")
 
 #### Punto 2 ####
 
-# Vamos a escribir la fÃ³rmula del modelo a estimar. Primero vamos a guardar la formula dado que la utilizaremos
+# Vamos a escribir la fórmula del modelo a estimar. Primero vamos a guardar la formula dado que la utilizaremos
 # luego. 
 
 library(Formula)
@@ -67,17 +67,51 @@ summary(desercion_probit_robust)
 
 #### Punto 3 #### 
 
+#### Punto 3 #### 
 
 # Media 
 
-marginal_media <- probitmfx(deserta ~  + + , data = data ,
+marginal_media <- probitmfx(deserta ~ mujer + educ_jefe + hermanos + ingreso_per_capita + jmujer +
+                              ch11_0 + ch11_1 + ch11_9 , data = data_d,
                             atmean = TRUE, robust = TRUE) 
+
+# En la media para hombres y mujeres 
+
+prueba1 <- margins(myprobit, at = list(mujer = 0:1))
+
+# Mediana 
+
+prueba2 <- margins(myprobit, at = list(mujer = median(data_d$mujer), educ_jefe = median(data_d$educ_jefe), 
+                                       hermanos = median(data_d$hermanos), ingreso_per_capita = median(data_d$ingreso_per_capita), 
+                                       jmujer = median(data_d$jmujer), ch11_0 = median(data_d$ch11_0), ch11_1 = median(data_d$ch11_1), ch11_9 = median(data_d$ch11_9)))
+
+# Moda
+
+
+prueba3 <- margins(myprobit, at = list(mujer = mfv(data_d$mujer), educ_jefe = mfv(data_d$educ_jefe), 
+                                       hermanos = mfv(data_d$hermanos), ingreso_per_capita = mfv(data_d$ingreso_per_capita), 
+                                       jmujer = mfv(data_d$jmujer), ch11_0 = mfv(data_d$ch11_0), ch11_1 = mfv(data_d$ch11_1), ch11_9 = mfv(data_d$ch11_9)))
+
+# En valores específicos (mínimo ingreso, minima educación del jefe de hogar, minima cantidad de hermanos)
+
+prueba4 <- margins(myprobit, at = list(mujer = mfv(data_d$mujer), educ_jefe = min(data_d$educ_jefe), 
+                                       hermanos = min(data_d$hermanos), ingreso_per_capita = min(data_d$ingreso_per_capita), 
+                                       jmujer = mfv(data_d$jmujer), ch11_0 = mfv(data_d$ch11_0), ch11_1 = mfv(data_d$ch11_1), ch11_9 = mfv(data_d$ch11_9)))
+
+
+
+prueba5 <- margins(myprobit, at = list(mujer = mfv(data_d$mujer), educ_jefe = max(data_d$educ_jefe), 
+                                       hermanos = max(data_d$hermanos), ingreso_per_capita = max(data_d$ingreso_per_capita), 
+                                       jmujer = mfv(data_d$jmujer), ch11_0 = mfv(data_d$ch11_0), ch11_1 = mfv(data_d$ch11_1), ch11_9 = mfv(data_d$ch11_9)))
+
+
+# Queda armar la tabla VER 
 
 
 ### Punto 4 ###
 
 # Ahora tenemos que estimar el mismo modelo pero como un modelo lineal de probabilidad. 
-# Sabemos que este modelo es intrÃ­nsecamente heterocedÃ¡stico, por lo que es necesario corregir la inferencia.
+# Sabemos que este modelo es intrínsecamente heterocedástico, por lo que es necesario corregir la inferencia.
 # Esto lo haremos utilizando los errores estandar robustos de White.
 
 
@@ -85,7 +119,7 @@ marginal_media <- probitmfx(deserta ~  + + , data = data ,
 
 desercion_mlp <- lm(modelo_desercion, data = data_d)
 
-# Mostramos la estimaciÃ³n utilizando la matriz de varianzas y covarianzas de White
+# Mostramos la estimación utilizando la matriz de varianzas y covarianzas de White
 
 desercion_mlp_robust <- coeftest(desercion_mlp, vcov = vcovHC(desercion_mlp, "HC1"))  
 
