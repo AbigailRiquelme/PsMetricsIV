@@ -67,8 +67,6 @@ summary(desercion_probit_robust)
 
 #### Punto 3 #### 
 
-#### Punto 3 #### 
-
 # Media 
 
 marginal_media <- probitmfx(deserta ~ mujer + educ_jefe + hermanos + ingreso_per_capita + jmujer +
@@ -146,8 +144,42 @@ stargazer(desercion_probit_robust, desercion_mlp_robust, type='text',
 #                               "SMSA", "Primer trimestre", "Segundo trimestre", 
 #                               "Tercer trimestre"), align = TRUE)
 
+
+#### Punto 6 #### 
+
+mujer_jm <- with(data, data.frame(mujer = (data_d$mujer=1), educ_jefe = mean(data_d$educ_jefe), 
+                                     hermanos = mean(data_d$hermanos), ingreso_per_capita = mean(data_d$ingreso_per_capita), 
+                                     jmujer = (data_d$jmujer=1), ch11_0 = (data_d$ch11_0=1), ch11_1 = (data_d$ch11_1=0), ch11_9 = (data_d$ch11_9=0))) 
+
+hombre_jm <- with(data, data.frame(mujer = (data_d$mujer=0), educ_jefe = mean(data_d$educ_jefe), 
+                                   hermanos = mean(data_d$hermanos), ingreso_per_capita = mean(data_d$ingreso_per_capita), 
+                                   jmujer = (data_d$jmujer=1), ch11_0 = (data_d$ch11_0=1), ch11_1 = (data_d$ch11_1=0), ch11_9 = (data_d$ch11_9=0))) 
+
+
+
+mujer_jh <- with(data, data.frame(mujer = (data_d$mujer=1), educ_jefe = mean(data_d$educ_jefe), 
+                               hermanos = mean(data_d$hermanos), ingreso_per_capita = mean(data_d$ingreso_per_capita), 
+                               jmujer = (data_d$jmujer=0), ch11_0 = (data_d$ch11_0=1), ch11_1 = (data_d$ch11_1=0), ch11_9 = (data_d$ch11_9=0))) 
+
+hombre_jh <- with(data, data.frame(mujer = (data_d$mujer=0), educ_jefe = mean(data_d$educ_jefe), 
+                                hermanos = mean(data_d$hermanos), ingreso_per_capita = mean(data_d$ingreso_per_capita), 
+                                jmujer = (data_d$jmujer=0), ch11_0 = (data_d$ch11_0=1), ch11_1 = (data_d$ch11_1=0), ch11_9 = (data_d$ch11_9=0))) 
+
+
+
+
+# Realizamos las predicciones 
+
+pred_mujer_jm <-  predict(desercion_mlp, mujer_jm, type="response")
           
-          
+pred_hombre_jm <- predict(desercion_mlp, hombre_jm, type="response")
+
+pred_mujer_jh <-  predict(desercion_mlp, mujer_jh, type="response")
+
+pred_hombre_jh <- predict(desercion_mlp, hombre_jh, type="response")
+
+
+
 
 
 
