@@ -147,14 +147,37 @@ stargazer(desercion_probit_robust, desercion_mlp_robust, type='text',
 
 #### Punto 6 #### 
 
+# Generamos las bases de datos 
+
+
+ingreso <- seq(0,100000,1)
+k <- length(ingreso)
+
+
+pred_probit6 <- predict(probit, newdata = data.frame(mujer=rep(1,k),
+                                                     educ_jefe= rep(mean(data_d$educ_jefe), k),
+                                                     hermanos = rep(mean(data_d$hermanos), k),
+                                                     ingreso_per_capita=ingreso,
+                                                     jmujer= rep(1,k),
+                                                     ch11_0= newpast6089,
+                                                     dayslate.90=rep(mean(dayslate.90),k),
+                                                     realestate=rep(mean(realestate),k),
+                                                     debt=rep(mean(debt),k),
+                                                     income=rep(mean(income),k)),
+                        type="response")
+
+
+
 mujer_jm <- with(data, data.frame(mujer = (data_d$mujer=1), educ_jefe = mean(data_d$educ_jefe), 
-                                     hermanos = mean(data_d$hermanos), ingreso_per_capita = mean(data_d$ingreso_per_capita), 
+                                     hermanos = mean(data_d$hermanos), ingreso_per_capita = (data_d$ingreso_per_capita), 
                                      jmujer = (data_d$jmujer=1), ch11_0 = (data_d$ch11_0=1), ch11_1 = (data_d$ch11_1=0), ch11_9 = (data_d$ch11_9=0))) 
+
+
+
 
 hombre_jm <- with(data, data.frame(mujer = (data_d$mujer=0), educ_jefe = mean(data_d$educ_jefe), 
                                    hermanos = mean(data_d$hermanos), ingreso_per_capita = mean(data_d$ingreso_per_capita), 
                                    jmujer = (data_d$jmujer=1), ch11_0 = (data_d$ch11_0=1), ch11_1 = (data_d$ch11_1=0), ch11_9 = (data_d$ch11_9=0))) 
-
 
 
 mujer_jh <- with(data, data.frame(mujer = (data_d$mujer=1), educ_jefe = mean(data_d$educ_jefe), 
@@ -177,6 +200,14 @@ pred_hombre_jm <- predict(desercion_mlp, hombre_jm, type="response")
 pred_mujer_jh <-  predict(desercion_mlp, mujer_jh, type="response")
 
 pred_hombre_jh <- predict(desercion_mlp, hombre_jh, type="response")
+
+
+# Graficamos 
+
+
+ggplot(pred_mujer_jm) +
+  geom_line(aes(x = ln_ing, y = mujer_jm), size = 1.5) +
+  theme_bw()
 
 
 
