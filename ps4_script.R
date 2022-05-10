@@ -19,3 +19,18 @@ dir <-
 setwd(dir)
 
 data <- read_dta("cuarto_trim_2019.dta")
+
+
+#### Punto 2 ####
+
+myprobit <- glm(deserta ~ +  + , family = binomial(link = "probit"), 
+                data = data)
+
+
+
+#### Punto 3 #### 
+
+# Media 
+
+marginal_media <- probitmfx(deserta ~  + + , data = data ,
+                            atmean = TRUE, robust = TRUE) 
