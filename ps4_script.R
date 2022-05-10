@@ -26,7 +26,6 @@ data <- read_dta("cuarto_trim_2019.dta")
 
 
 
-
 # Punto 1
 
 
@@ -36,11 +35,12 @@ data_d <- dummy_cols(data, select_columns = "ch11")
 
 
 
-
 #### Punto 2 ####
 
 # Vamos a escribir la fórmula del modelo a estimar. Primero vamos a guardar la formula dado que la utilizaremos
 # luego. 
+
+# VER: PASAR A DUMMIES LA DE EDUC DE JEFE DE HOGAR! 
 
 library(Formula)
 modelo_desercion <- Formula(deserta ~ mujer + educ_jefe + hermanos + ingreso_per_capita + jmujer +
