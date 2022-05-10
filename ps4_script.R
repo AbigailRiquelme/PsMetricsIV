@@ -163,6 +163,7 @@ pred_mujer <- predict(desercion_probit, newdata = data.frame(mujer=rep(1,k),
                                                      ch11_1=rep(0,k),
                                                      ch11_9=rep(0,k), type="response"))
 
+
 pred_hombre <- predict(desercion_probit, newdata = data.frame(mujer=rep(0,k),
                                                              educ_jefe= rep(mean(data_d$educ_jefe), k),
                                                              hermanos = rep(mean(data_d$hermanos), k),
@@ -184,6 +185,7 @@ pred_jm <- predict(desercion_probit, newdata = data.frame(mujer=rep(1,k),
                                                            ch11_9=rep(0,k), type="response"))
 
 
+
 pred_jh <- predict(desercion_probit, newdata = data.frame(mujer=rep(1,k),
                                                        educ_jefe= rep(mean(data_d$educ_jefe), k),
                                                        hermanos = rep(mean(data_d$hermanos), k),
@@ -198,6 +200,7 @@ pred_jh <- predict(desercion_probit, newdata = data.frame(mujer=rep(1,k),
 
 df_final <- data.frame(
   pred_jm, pred_jh, pred_hombre, pred_mujer)
+
 
 # Graficamos 
 
