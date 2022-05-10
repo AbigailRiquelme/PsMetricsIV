@@ -202,29 +202,30 @@ df_final <- data.frame(
 # Graficamos 
 
 
-ggplot(aes(x = ingreso, y = pred_jm), data = df_final) + 
-  geom_line(aes(x=ingreso, y = pred_jh), col = "burlywood2", size = 1) +
-  geom_line(aes(x = ingreso, y = pred_jm), col = "azure3", size = 1) +
-  ggtitle("") +
+ggplot()+
+  geom_line(data=df_final,aes(y=pred_jm,x= ingreso,colour="Mujer"),size=1 )+
+  geom_line(data=df_final,aes(y=pred_jh,x= ingreso,colour="Hombre"),size=1) +
+  scale_color_manual(name = "Jefe de hogar", values = c("Mujer" = "burlywood2", "Hombre" = "azure3"))+
+  ggtitle("Probabilidad de deserción en función del ingreso para jefes de hogar") +
   xlab("Ingreso per capita")+
   ylab("Predicción")+
   theme_bw()
 
 
-ggplot(aes(x = ingreso, y = pred_mujer), data = df_final) + 
-  geom_line(aes(x=ingreso, y = pred_mujer), col = "burlywood2", size = 1) +
-  geom_line(aes(x = ingreso, y = pred_hombre), col = "azure3", size = 1) +
-  ggtitle("") +
+ggsave(file="jefehogar.eps", width=6.5, height=4, dpi=300)
+
+
+
+ggplot()+
+  geom_line(data=df_final,aes(y=pred_mujer,x= ingreso,colour="Mujer"),size=1 )+
+  geom_line(data=df_final,aes(y=pred_hombre,x= ingreso,colour="Hombre"),size=1) +
+  scale_color_manual(name = "Sexo", values = c("Mujer" = "burlywood2", "Hombre" = "azure3"))+
+  ggtitle("Probabilidad de deserción en función del ingreso para jefes de hogar") +
   xlab("Ingreso per capita")+
   ylab("Predicción")+
   theme_bw()
 
-
-
-
-
-
-
+ggsave(file="sexo.eps", width=6.5, height=4, dpi=300)
 
 
 
