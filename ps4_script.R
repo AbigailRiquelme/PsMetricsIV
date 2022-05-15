@@ -35,9 +35,77 @@ data_d <- dummy_cols(data, select_columns = "ch11")
 
 data_d <- dummy_cols(data_d, select_columns = "educ_jefe")
 
+
+
+# Eliminamos las observaciones para las cuales el ingreso per cápita es cero 
+
+data_d <- data_d[data_d$ingreso_per_capita > 1, ]
+
+# De esta forma eliminamos 735 observaciones 
+
+library(ggplot2)
+library(dplyr)
+
+# Histograma y densidad para el ingreso per capita 
+
+
+ingreso_den <- ggplot(data_d, aes(x=`ingreso_per_capita`, group=`deserta`, color=factor(`deserta`)))+ 
+  geom_density(adjust=2, size = 0.75) + 
+  geom_vline(aes(xintercept = mean(ingreso_per_capita)), 
+             linetype = "dashed", size = 0.6) +
+  xlab("Ingreso per cápita") +
+  ylab("Densidad")+
+  theme_minimal() + 
+  ggtitle("Densidad del ingreso per cápita", subtitle = "EPH 2019")+
+  scale_colour_manual(
+    values = c("burlywood2", "azure3"), 
+    labels = c("Si", "No"),
+    name = "Deserta")+
+  theme(
+    legend.key.size = unit(0.5, "cm"),
+    legend.key.width = unit(0.5,"cm") 
+  )
+
+ingreso_den
+
+ggsave(file="ingreso_den.eps", width=6.5, height=4, dpi=300)
+
+
+
+
+hermanos_den <- ggplot(data_d, aes(x=`hermanos`, group=`deserta`, color=factor(`deserta`)))+ 
+  geom_histogram(size = 0.75, fill="white") + geom_vline(aes(xintercept = mean(hermanos)), 
+                                                         linetype = "dashed", size = 0.6) +
+  xlab("Cantidad de hermanos") +
+  ylab("Observaciones")+
+  theme_minimal() + 
+  ggtitle("Histograma de la cantidad de hermanos", subtitle = "EPH 2019")+
+  scale_colour_manual(
+    values = c("burlywood2", "azure3"), 
+    labels = c("Si", "No"),
+    name = "Deserta")
+
+hermanos_den
+
+ggsave(file="hermanos_den.eps", width=6.5, height=4, dpi=300)
+
+
+# Realizamos tablas para obtener la frecuencia de la cantidad de hombres y mujeres según si desertan o no
+
+# el que está como columna es mujer y el que está como fila es deserta 
+
+tabla_1 <- table(data_d$deserta, data_d$`mujer`)
+tabla_2 <- prop.table(tabla_1)
+
+# Exportamos la tabla 
+
+stargazer(tabla_2, type='latex',
+          dep.var.labels=c("Deserta", "No deserta"))
+
+
 #### Punto 2 ####
 
-# Vamos a escribir la f?rmula del modelo a estimar. Primero vamos a guardar la formula dado que la utilizaremos
+# Vamos a escribir la fórmula del modelo a estimar. Primero vamos a guardar la formula dado que la utilizaremos
 # luego. 
 
 # Es importante destacar que usamos como categor?a base educ_jefe_2 para el nivel educativo de los jefes de hogar y 
@@ -45,8 +113,11 @@ data_d <- dummy_cols(data_d, select_columns = "educ_jefe")
 # ch11_1. 
 
 library(Formula)
-modelo_desercion <- Formula(deserta ~ mujer + educ_jefe_0 + educ_jefe_3 + educ_jefe_4 + educ_jefe_5 + educ_jefe_6 + educ_jefe_7 + hermanos + ingreso_per_capita + jmujer +
+modelo_desercion <- Formula(deserta ~ mujer + educ_jefe_0 + educ_jefe_3 + educ_jefe_4 + educ_jefe_5 + 
+                              educ_jefe_6 + educ_jefe_7 + hermanos + ingreso_per_capita + jmujer +
                      ch11_0 + ch11_1 + ch11_9)
+
+# esto va??
 
 modelo_desercion <- Formula(deserta ~ mujer + hermanos + ingreso_per_capita + jmujer +
                               ch11_0 + ch11_1 + ch11_9)
@@ -154,7 +225,7 @@ data_d$ln_ing <- log(data_d$ingreso_per_capita, base = exp(1))
 
 # Exportamos las estimaciones:
 
-stargazer(desercion_probit_robust, desercion_mlp_robust, type='text',
+stargazer(desercion_probit_robust, desercion_mlp_robust, type='latex',
           dep.var.labels=c("Deserta", "Deserta"),
           notes = "Robust standard errors in parentheses")
 
