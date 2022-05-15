@@ -48,6 +48,11 @@ library(Formula)
 modelo_desercion <- Formula(deserta ~ mujer + educ_jefe_0 + educ_jefe_3 + educ_jefe_4 + educ_jefe_5 + educ_jefe_6 + educ_jefe_7 + hermanos + ingreso_per_capita + jmujer +
                      ch11_0 + ch11_1 + ch11_9)
 
+modelo_desercion <- Formula(deserta ~ mujer + hermanos + ingreso_per_capita + jmujer +
+                              ch11_0 + ch11_1 + ch11_9)
+
+
+
 # Estimamos el probit
 
 desercion_probit <- glm(modelo_desercion , family = binomial(link = "probit"), 
