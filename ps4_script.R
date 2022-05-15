@@ -14,7 +14,7 @@
 
 dir <- 
 dir <- "/Users/Abi/Documents/GitHub/PsMetricsIV"
-dir <- "C:/Users/estef/Desktop/San Andrés/2022/Econometría Avanzada/PsMetricsIV/PsMetricsIV"
+dir <- "C:/Users/estef/Desktop/San Andr?s/2022/Econometr?a Avanzada/PsMetricsIV/PsMetricsIV"
 
 setwd(dir)
 
@@ -37,10 +37,10 @@ data_d <- dummy_cols(data_d, select_columns = "educ_jefe")
 
 #### Punto 2 ####
 
-# Vamos a escribir la fórmula del modelo a estimar. Primero vamos a guardar la formula dado que la utilizaremos
+# Vamos a escribir la f?rmula del modelo a estimar. Primero vamos a guardar la formula dado que la utilizaremos
 # luego. 
 
-# Es importante destacar que usamos como categoría base educ_jefe_2 para el nivel educativo de los jefes de hogar y 
+# Es importante destacar que usamos como categor?a base educ_jefe_2 para el nivel educativo de los jefes de hogar y 
 
 # ch11_1. 
 
@@ -66,7 +66,7 @@ library(margins)
 # Calculamos:
 
 desercion_probit_robust <-  coeftest(desercion_probit, vcov = vcovHC(desercion_probit, "HC1"))  
-summary(desercion_probit_robust)
+desercion_probit_robust
 
 
 #### Punto 3 #### 
@@ -100,9 +100,9 @@ prueba3 <- margins(desercion_probit, at = list(mujer = mfv(data_d$mujer), educ_j
                                        educ_jefe_6 = mfv(data_d$educ_jefe_6), educ_jefe_7 = mfv(data_d$educ_jefe_7),
                                        jmujer = mfv(data_d$jmujer), ch11_0 = mfv(data_d$ch11_0), ch11_1 = mfv(data_d$ch11_1), ch11_9 = mfv(data_d$ch11_9)))
 
-# En valores específicos (mínimo ingreso, minima educación del jefe de hogar, minima cantidad de hermanos)
+# En valores espec?ficos (m?nimo ingreso, minima educaci?n del jefe de hogar, minima cantidad de hermanos)
 
-prueba4 <- margins(myprobit, at = list(mujer = median(data_d$mujer), educ_jefe = min(data_d$educ_jefe), 
+prueba4 <- margins(desercion_probit, at = list(mujer = median(data_d$mujer), educ_jefe = min(data_d$educ_jefe), 
                                        hermanos = min(data_d$hermanos), ingreso_per_capita = min(data_d$ingreso_per_capita), 
                                        educ_jefe_0 = median(data_d$educ_jefe_0), educ_jefe_3 = median(data_d$educ_jefe_3), 
                                        educ_jefe_4 = median(data_d$educ_jefe_4), educ_jefe_5 = median(data_d$educ_jefe_5), 
@@ -122,7 +122,7 @@ prueba5 <- margins(myprobit, at = list(mujer = mfv(data_d$mujer), educ_jefe = ma
 ### Punto 4 ###
 
 # Ahora tenemos que estimar el mismo modelo pero como un modelo lineal de probabilidad. 
-# Sabemos que este modelo es intrínsecamente heterocedástico, por lo que es necesario corregir la inferencia.
+# Sabemos que este modelo es intr?nsecamente heteroced?stico, por lo que es necesario corregir la inferencia.
 # Esto lo haremos utilizando los errores estandar robustos de White.
 
 
@@ -130,7 +130,7 @@ prueba5 <- margins(myprobit, at = list(mujer = mfv(data_d$mujer), educ_jefe = ma
 
 desercion_mlp <- lm(modelo_desercion, data = data_d)
 
-# Mostramos la estimación utilizando la matriz de varianzas y covarianzas de White
+# Mostramos la estimaci?n utilizando la matriz de varianzas y covarianzas de White
 
 desercion_mlp_robust <- coeftest(desercion_mlp, vcov = vcovHC(desercion_mlp, "HC1"))  
 
@@ -247,9 +247,9 @@ ggplot()+
   geom_line(data=df_final,aes(y=pred_jm,x= ingreso,colour="Mujer"),size=1 )+
   geom_line(data=df_final,aes(y=pred_jh,x= ingreso,colour="Hombre"),size=1) +
   scale_color_manual(name = "Jefe de hogar", values = c("Mujer" = "burlywood2", "Hombre" = "azure3"))+
-  ggtitle("Probabilidad de deserción en función del ingreso para jefes de hogar") +
+  ggtitle("Probabilidad de deserci?n en funci?n del ingreso para jefes de hogar") +
   xlab("Ingreso per capita")+
-  ylab("Predicción")+
+  ylab("Predicci?n")+
   theme_bw()
 
 
@@ -261,9 +261,9 @@ ggplot()+
   geom_line(data=df_final,aes(y=pred_mujer,x= ingreso,colour="Mujer"),size=1 )+
   geom_line(data=df_final,aes(y=pred_hombre,x= ingreso,colour="Hombre"),size=1) +
   scale_color_manual(name = "Sexo", values = c("Mujer" = "burlywood2", "Hombre" = "azure3"))+
-  ggtitle("Probabilidad de deserción en función del ingreso para jefes de hogar") +
+  ggtitle("Probabilidad de deserci?n en funci?n del ingreso para jefes de hogar") +
   xlab("Ingreso per capita")+
-  ylab("Predicción")+
+  ylab("Predicci?n")+
   theme_bw()
 
 ggsave(file="sexo.eps", width=6.5, height=4, dpi=300)
