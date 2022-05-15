@@ -215,9 +215,8 @@ desercion_mlp_robust <- coeftest(desercion_mlp, vcov = vcovHC(desercion_mlp, "HC
 
 #### Punto 5 #### 
 
-# Reemplazamos todos los valores que son ceros por 1.
-
-data_d$ingreso_per_capita[data_d$ingreso_per_capita == 0] <- 1
+# No hacemos el reemplazo de las observaciones que tienen ingreso igual a cero, dado que consideramos 
+# que no son informativas de la probabilidad de decersión escolar
 
 # Generamos la nueva variable
 
@@ -227,6 +226,10 @@ data_d$ln_ing <- log(data_d$ingreso_per_capita, base = exp(1))
 
 stargazer(desercion_probit_robust, desercion_mlp_robust, type='latex',
           dep.var.labels=c("Deserta", "Deserta"),
+          covariate.labels = c("Mujer", "Educación JH (missing)", "Educación JH (EGB)", "Educación JH (Secundario)",
+                               "Educación JH (Polimodal)", "Educación JH (Terciario)", "Educación JH (Universitario)", 
+                               "Cantidad de hermanos", "Ingreso per cápita", "Jefe de hogar mujer", "Establecimiento educativo (missing)", 
+                               "Establecimiento educativo (público)", "Establecimiento educativo (no responde)"),
           notes = "Robust standard errors in parentheses")
 
 #covariate.labels = c("Educacion",  "Edad", "Edad2", "Race", "Married", 
