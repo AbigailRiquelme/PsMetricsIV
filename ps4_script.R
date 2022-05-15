@@ -33,18 +33,20 @@ library(fastDummies)
 
 data_d <- dummy_cols(data, select_columns = "ch11")
 
-
+data_d <- dummy_cols(data_d, select_columns = "educ_jefe")
 
 #### Punto 2 ####
 
 # Vamos a escribir la fórmula del modelo a estimar. Primero vamos a guardar la formula dado que la utilizaremos
 # luego. 
 
-# VER: PASAR A DUMMIES LA DE EDUC DE JEFE DE HOGAR! 
+# Es importante destacar que usamos como categoría base educ_jefe_2 para el nivel educativo de los jefes de hogar y 
+
+# ch11_1. 
 
 library(Formula)
-modelo_desercion <- Formula(deserta ~ mujer + educ_jefe + hermanos + ingreso_per_capita + jmujer +
-                     ch11_0 + ch11_1 + ch11_9 )
+modelo_desercion <- Formula(deserta ~ mujer + educ_jefe_0 + educ_jefe_3 + educ_jefe_4 + educ_jefe_5 + educ_jefe_6 + educ_jefe_7 + hermanos + ingreso_per_capita + jmujer +
+                     ch11_0 + ch11_1 + ch11_9)
 
 # Estimamos el probit
 
@@ -58,6 +60,8 @@ desercion_probit <- glm(modelo_desercion , family = binomial(link = "probit"),
 
 library(lmtest)
 library(sandwich)
+library(mfx)
+library(margins)
 
 # Calculamos:
 
@@ -69,32 +73,41 @@ summary(desercion_probit_robust)
 
 # Media 
 
-marginal_media <- probitmfx(deserta ~ mujer + educ_jefe + hermanos + ingreso_per_capita + jmujer +
-                              ch11_0 + ch11_1 + ch11_9 , data = data_d,
+marginal_media <- probitmfx(deserta ~ mujer + educ_jefe_0 + educ_jefe_3 + educ_jefe_4 + educ_jefe_5 + educ_jefe_6 + educ_jefe_7 + hermanos + ingreso_per_capita + jmujer +
+                              ch11_0 + ch11_1 + ch11_9, data = data_d,
                             atmean = TRUE, robust = TRUE) 
 
 # En la media para hombres y mujeres 
 
-prueba1 <- margins(myprobit, at = list(mujer = 0:1))
+prueba1 <- margins(desercion_probit, at = list(mujer = 0:1))
 
 # Mediana 
 
-prueba2 <- margins(myprobit, at = list(mujer = median(data_d$mujer), educ_jefe = median(data_d$educ_jefe), 
-                                       hermanos = median(data_d$hermanos), ingreso_per_capita = median(data_d$ingreso_per_capita), 
-                                       jmujer = median(data_d$jmujer), ch11_0 = median(data_d$ch11_0), ch11_1 = median(data_d$ch11_1), ch11_9 = median(data_d$ch11_9)))
+
+prueba2 <- margins(desercion_probit, at = list(mujer = median(data_d$mujer), educ_jefe = median(data_d$educ_jefe), 
+                                       hermanos = median(data_d$hermanos), educ_jefe_0 = median(data_d$educ_jefe_0), educ_jefe_3 = median(data_d$educ_jefe_3), 
+                                       educ_jefe_4 = median(data_d$educ_jefe_4), educ_jefe_5 = median(data_d$educ_jefe_5), educ_jefe_6 = median(data_d$educ_jefe_6), 
+                                       educ_jefe_7 = median(data_d$educ_jefe_7), ingreso_per_capita = median(data_d$ingreso_per_capita), jmujer = median(data_d$jmujer), 
+                                       ch11_0 = median(data_d$ch11_0), ch11_1 = median(data_d$ch11_1), ch11_9 = median(data_d$ch11_9)))
 
 # Moda
 
 
-prueba3 <- margins(myprobit, at = list(mujer = mfv(data_d$mujer), educ_jefe = mfv(data_d$educ_jefe), 
+prueba3 <- margins(desercion_probit, at = list(mujer = mfv(data_d$mujer), educ_jefe = mfv(data_d$educ_jefe), 
                                        hermanos = mfv(data_d$hermanos), ingreso_per_capita = mfv(data_d$ingreso_per_capita), 
+                                       educ_jefe_0 = mfv(data_d$educ_jefe_0), educ_jefe_3 = mfv(data_d$educ_jefe_3), 
+                                       educ_jefe_4 = mfv(data_d$educ_jefe_4), educ_jefe_5 = mfv(data_d$educ_jefe_5), 
+                                       educ_jefe_6 = mfv(data_d$educ_jefe_6), educ_jefe_7 = mfv(data_d$educ_jefe_7),
                                        jmujer = mfv(data_d$jmujer), ch11_0 = mfv(data_d$ch11_0), ch11_1 = mfv(data_d$ch11_1), ch11_9 = mfv(data_d$ch11_9)))
 
 # En valores específicos (mínimo ingreso, minima educación del jefe de hogar, minima cantidad de hermanos)
 
-prueba4 <- margins(myprobit, at = list(mujer = mfv(data_d$mujer), educ_jefe = min(data_d$educ_jefe), 
+prueba4 <- margins(myprobit, at = list(mujer = median(data_d$mujer), educ_jefe = min(data_d$educ_jefe), 
                                        hermanos = min(data_d$hermanos), ingreso_per_capita = min(data_d$ingreso_per_capita), 
-                                       jmujer = mfv(data_d$jmujer), ch11_0 = mfv(data_d$ch11_0), ch11_1 = mfv(data_d$ch11_1), ch11_9 = mfv(data_d$ch11_9)))
+                                       educ_jefe_0 = median(data_d$educ_jefe_0), educ_jefe_3 = median(data_d$educ_jefe_3), 
+                                       educ_jefe_4 = median(data_d$educ_jefe_4), educ_jefe_5 = median(data_d$educ_jefe_5), 
+                                       educ_jefe_6 = median(data_d$educ_jefe_6), educ_jefe_7 = median(data_d$educ_jefe_7),
+                                       jmujer = median(data_d$jmujer), ch11_0 = median(data_d$ch11_0), ch11_1 = median(data_d$ch11_1), ch11_9 = median(data_d$ch11_9)))
 
 
 
@@ -154,10 +167,17 @@ ingreso <- seq(0,100000,100)
 k <- length(ingreso)
 
 
+
 pred_mujer <- predict(desercion_probit, newdata = data.frame(mujer=rep(1,k),
                                                      educ_jefe= rep(mean(data_d$educ_jefe), k),
                                                      hermanos = rep(mean(data_d$hermanos), k),
                                                      ingreso_per_capita=ingreso,
+                                                     educ_jefe_0 = rep(0,k),
+                                                     educ_jefe_3 = rep(1,k),
+                                                     educ_jefe_4 = rep(0,k),
+                                                     educ_jefe_5 = rep(0,k),
+                                                     educ_jefe_6 = rep(0,k),
+                                                     educ_jefe_7 = rep(0,k),
                                                      jmujer= rep(1,k),
                                                      ch11_0= rep(1,k),
                                                      ch11_1=rep(0,k),
@@ -168,6 +188,12 @@ pred_hombre <- predict(desercion_probit, newdata = data.frame(mujer=rep(0,k),
                                                              educ_jefe= rep(mean(data_d$educ_jefe), k),
                                                              hermanos = rep(mean(data_d$hermanos), k),
                                                              ingreso_per_capita=ingreso,
+                                                             educ_jefe_0 = rep(0,k),
+                                                             educ_jefe_3 = rep(1,k),
+                                                             educ_jefe_4 = rep(0,k),
+                                                             educ_jefe_5 = rep(0,k),
+                                                             educ_jefe_6 = rep(0,k),
+                                                             educ_jefe_7 = rep(0,k),
                                                              jmujer= rep(1,k),
                                                              ch11_0= rep(1,k),
                                                              ch11_1=rep(0,k),
@@ -179,6 +205,12 @@ pred_jm <- predict(desercion_probit, newdata = data.frame(mujer=rep(1,k),
                                                            educ_jefe= rep(mean(data_d$educ_jefe), k),
                                                            hermanos = rep(mean(data_d$hermanos), k),
                                                            ingreso_per_capita=ingreso,
+                                                           educ_jefe_0 = rep(0,k),
+                                                           educ_jefe_3 = rep(1,k),
+                                                           educ_jefe_4 = rep(0,k),
+                                                           educ_jefe_5 = rep(0,k),
+                                                           educ_jefe_6 = rep(0,k),
+                                                           educ_jefe_7 = rep(0,k),
                                                            jmujer= rep(1,k),
                                                            ch11_0= rep(1,k),
                                                            ch11_1=rep(0,k),
@@ -190,6 +222,12 @@ pred_jh <- predict(desercion_probit, newdata = data.frame(mujer=rep(1,k),
                                                        educ_jefe= rep(mean(data_d$educ_jefe), k),
                                                        hermanos = rep(mean(data_d$hermanos), k),
                                                        ingreso_per_capita=ingreso,
+                                                       educ_jefe_0 = rep(0,k),
+                                                       educ_jefe_3 = rep(1,k),
+                                                       educ_jefe_4 = rep(0,k),
+                                                       educ_jefe_5 = rep(0,k),
+                                                       educ_jefe_6 = rep(0,k),
+                                                       educ_jefe_7 = rep(0,k),
                                                        jmujer= rep(0,k),
                                                        ch11_0= rep(1,k),
                                                        ch11_1=rep(0,k),
