@@ -90,7 +90,25 @@ hermanos_den
 ggsave(file="hermanos_den.eps", width=6.5, height=4, dpi=300)
 
 
-# Realizamos tablas para obtener la frecuencia de la cantidad de hombres y mujeres según si desertan o no
+# Realizamos un gráfico de barras sobre el nivel educativo del jefe de hogar diferenciando según la variable deserta 
+
+counts <- table(data_d$deserta, data_d$educ_jefe)
+
+barplot(counts, main="Nivel educativo del jefe de hogar",
+        xlab="Nivel educativo del jefe de hogar", ylab="Cantidad de observaciones",col=c("burlywood2", "azure3"),
+        legend.text = c("Desertó", "No desertó"), beside=TRUE)
+
+# Realizamos un gráfico de barras sobre el tipo de institución educativa a la que se asiste según la variable deserta 
+
+counts_1 <- table(data_d$deserta, data_d$ch11)
+
+barplot(counts_1, main="Tipo de establecimiento educativo",
+        xlab="Tipo de establecimiento educativo", ylab="Cantidad de observaciones",col=c("burlywood2", "azure3"),
+        legend.text = c("Desertó", "No desertó"), beside=TRUE)
+
+
+
+# Realizamos una tabla para obtener la frecuencia de la cantidad de hombres y mujeres según si desertan o no
 
 # el que está como columna es mujer y el que está como fila es deserta 
 
