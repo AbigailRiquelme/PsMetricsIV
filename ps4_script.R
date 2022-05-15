@@ -14,7 +14,7 @@
 
 dir <- 
 dir <- "/Users/Abi/Documents/GitHub/PsMetricsIV"
-dir <-
+dir <- "C:/Users/estef/Desktop/San Andrés/2022/Econometría Avanzada/PsMetricsIV/PsMetricsIV"
 
 setwd(dir)
 
