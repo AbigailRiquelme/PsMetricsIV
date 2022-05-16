@@ -271,7 +271,6 @@ k <- length(ingreso)
 
 
 pred_mujer <- predict(desercion_probit, newdata = data.frame(mujer=rep(1,k),
-                                                     educ_jefe= rep(mean(data_d$educ_jefe), k),
                                                      hermanos = rep(mean(data_d$hermanos), k),
                                                      ingreso_per_capita=ingreso,
                                                      educ_jefe_0 = rep(0,k),
@@ -287,7 +286,6 @@ pred_mujer <- predict(desercion_probit, newdata = data.frame(mujer=rep(1,k),
 
 
 pred_hombre <- predict(desercion_probit, newdata = data.frame(mujer=rep(0,k),
-                                                             educ_jefe= rep(mean(data_d$educ_jefe), k),
                                                              hermanos = rep(mean(data_d$hermanos), k),
                                                              ingreso_per_capita=ingreso,
                                                              educ_jefe_0 = rep(0,k),
@@ -304,7 +302,6 @@ pred_hombre <- predict(desercion_probit, newdata = data.frame(mujer=rep(0,k),
 
 
 pred_jm <- predict(desercion_probit, newdata = data.frame(mujer=rep(1,k),
-                                                           educ_jefe= rep(mean(data_d$educ_jefe), k),
                                                            hermanos = rep(mean(data_d$hermanos), k),
                                                            ingreso_per_capita=ingreso,
                                                            educ_jefe_0 = rep(0,k),
@@ -321,7 +318,6 @@ pred_jm <- predict(desercion_probit, newdata = data.frame(mujer=rep(1,k),
 
 
 pred_jh <- predict(desercion_probit, newdata = data.frame(mujer=rep(1,k),
-                                                       educ_jefe= rep(mean(data_d$educ_jefe), k),
                                                        hermanos = rep(mean(data_d$hermanos), k),
                                                        ingreso_per_capita=ingreso,
                                                        educ_jefe_0 = rep(0,k),
