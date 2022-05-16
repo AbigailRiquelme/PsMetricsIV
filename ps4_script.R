@@ -72,7 +72,6 @@ ggsave(file="ingreso_den.eps", width=6.5, height=4, dpi=300)
 
 
 
-
 hermanos_den <- ggplot(data_d, aes(x=`hermanos`, group=`deserta`, color=factor(`deserta`)))+ 
   geom_histogram(size = 0.75, fill="white") + geom_vline(aes(xintercept = mean(hermanos)), 
                                                          linetype = "dashed", size = 0.6) +
@@ -94,18 +93,15 @@ ggsave(file="hermanos_den.eps", width=6.5, height=4, dpi=300)
 
 counts <- table(data_d$deserta, data_d$educ_jefe)
 
-barplot(counts, main="Nivel educativo del jefe de hogar",
+graf_nivel_educ <- barplot(counts, main="Nivel educativo del jefe de hogar",
         xlab="Nivel educativo del jefe de hogar", ylab="Cantidad de observaciones",col=c("burlywood2", "azure3"),
         legend.text = c("Desertó", "No desertó"), beside=TRUE)
-
-ggsave(file="jh_educ.eps", width=6.5, height=4, dpi=300)
-
 
 # Realizamos un gráfico de barras sobre el tipo de institución educativa a la que se asiste según la variable deserta 
 
 counts_1 <- table(data_d$deserta, data_d$ch11)
 
-barplot(counts_1, main="Tipo de establecimiento educativo",
+graf_est_educ <- barplot(counts_1, main="Tipo de establecimiento educativo",
         xlab="Tipo de establecimiento educativo", ylab="Cantidad de observaciones",col=c("burlywood2", "azure3"),
         legend.text = c("Desertó", "No desertó"), beside=TRUE)
 
