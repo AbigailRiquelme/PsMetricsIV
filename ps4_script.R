@@ -11,23 +11,16 @@
 # Antes de comenzar vamos a definir el directorio en el que guardaremos las bases 
 # que vamos a exportar e importar.
 
-
-dir <- 
 dir <- "/Users/Abi/Documents/GitHub/PsMetricsIV"
 dir <- "C:/Users/estef/Desktop/San Andr?s/2022/Econometr?a Avanzada/PsMetricsIV/PsMetricsIV"
 
 setwd(dir)
 
-
-
 library(haven)
 data <- read_dta("https://econometriaudesa.weebly.com/uploads/1/3/6/3/136372338/cuarto_trim_2019.dta")
 data <- read_dta("cuarto_trim_2019.dta")
 
-
-
-# Punto 1
-
+#### Punto 1 ####
 
 library(fastDummies)
 
@@ -51,14 +44,14 @@ library(dplyr)
 
 # Densidad para el ingreso per capita 
 
-ingreso_den <- ggplot(data_d, aes(x=`ingreso_per_capita`, group=`deserta`, color=factor(`deserta`)))+ 
+g1 <- ggplot(data_d, aes(x=`ingreso_per_capita`, group=`deserta`, color=factor(`deserta`)))+ 
   geom_density(adjust=2, size = 0.75) + 
   geom_vline(aes(xintercept = mean(ingreso_per_capita)), 
              linetype = "dashed", size = 0.6) +
-  xlab("Ingreso per c?pita") +
+  xlab("Ingreso per cápita") +
   ylab("Densidad")+
   theme_minimal() + 
-  ggtitle("Densidad del ingreso per capita")+
+  ggtitle("Densidad del ingreso per cápita")+
   scale_colour_manual(
     values = c("burlywood2", "azure3"), 
     labels = c("No", "Si"),
@@ -69,13 +62,12 @@ ingreso_den <- ggplot(data_d, aes(x=`ingreso_per_capita`, group=`deserta`, color
     plot.title = element_text(hjust = 0.5)
   )
 
-ingreso_den
 
 ggsave(file="ingreso_den.eps", width=6.5, height=4, dpi=300)
 
 # Histograma de frecuencia de la cantidad de hermanos
 
-hermanos_den <- ggplot(data_d, aes(x=`hermanos`, group=`deserta`, color=factor(`deserta`)))+ 
+g2 <- ggplot(data_d, aes(x=`hermanos`, group=`deserta`, color=factor(`deserta`)))+ 
   geom_histogram(size = 0.75, fill="white") + 
   geom_vline(aes(xintercept = mean(hermanos)), 
              linetype = "dashed", size = 0.6) +
@@ -111,7 +103,7 @@ data_d$deserta_lab[data_d$deserta == 1] = "Si"
 data_d$deserta_lab[data_d$deserta == 0] = "No"
 
 
-ggplot(data_d, mapping = aes(x = educ_lab,
+g3 <- ggplot(data_d, mapping = aes(x = educ_lab,
                      y = after_stat(count/sum(count)),
                 fill = deserta_lab)) +
   geom_bar() + 
@@ -125,6 +117,16 @@ ggplot(data_d, mapping = aes(x = educ_lab,
   ggtitle("Nivel educativo del jefe de hogar") + 
   theme(legend.position = "right",
         plot.title = element_text(hjust = 0.5))
+
+
+
+
+library(gridExtra)
+
+grid.arrange(g1, g2, g3, nrow = 3, ncol = 1)
+
+ggsave(file="FirEpid.eps", width=6.5, height=4, dpi=300)
+
 
 
 # Realizamos un gráfico de barras sobre el tipo de instituci?n educativa a la que se asiste seg?n la variable deserta 
@@ -258,7 +260,7 @@ prueba4 <- margins(desercion_probit, at = list(mujer = median(data_d$mujer),
 # Queda armar la tabla VER 
 
 
-### Punto 4 ###
+#### Punto 4 ####
 
 # Ahora tenemos que estimar el mismo modelo pero como un modelo lineal de probabilidad. 
 # Sabemos que este modelo es intr?nsecamente heteroced?stico, por lo que es necesario 
@@ -294,7 +296,7 @@ data_d$ln_ing <- log(data_d$ingreso_per_capita)
 ingreso <- seq(0,100000,500)
 k <- length(ingreso)
 
-# Hacemos las predicciones en 
+# Hacemos las predicciones
 
 pred_mujer <- predict(desercion_probit, with(data_d, data.frame(mujer=rep(1,k),
                                                           hermanos = rep(median(data_d$hermanos), k),
@@ -311,8 +313,6 @@ pred_mujer <- predict(desercion_probit, with(data_d, data.frame(mujer=rep(1,k),
                                                           ch11_1=rep(0,k),
                                                           ch11_9=rep(0,k))), type = "response")
 
-
-
 pred_hombre <- predict(desercion_probit, with(data_d, data.frame(mujer=rep(0,k),
                                                                 hermanos = rep(median(data_d$hermanos), k),
                                                                 ingreso_per_capita=ingreso,
@@ -328,9 +328,6 @@ pred_hombre <- predict(desercion_probit, with(data_d, data.frame(mujer=rep(0,k),
                                                                 ch11_1=rep(0,k),
                                                                 ch11_9=rep(0,k))), type = "response")
 
-
-
-
 pred_jm <- predict(desercion_probit, with(data_d, data.frame(mujer=rep(1,k),
                                                                  hermanos = rep(median(data_d$hermanos), k),
                                                                  ingreso_per_capita=ingreso,
@@ -345,7 +342,6 @@ pred_jm <- predict(desercion_probit, with(data_d, data.frame(mujer=rep(1,k),
                                                                  ch11_0= rep(1,k),
                                                                  ch11_1=rep(0,k),
                                                                  ch11_9=rep(0,k))), type = "response")
-
 
 pred_jh <- predict(desercion_probit, with(data_d, data.frame(mujer=rep(1,k),
                                                              hermanos = rep(median(data_d$hermanos), k),
@@ -370,8 +366,7 @@ df_final <- data.frame(
   pred_hombre, 
   pred_mujer)
 
-
-# Graficamos 
+# Graficamos:
 
 # Según si el jefe es mujer u hombre
 
@@ -381,7 +376,7 @@ ggplot()+
   scale_color_manual(name = "Jefe de hogar", values = c("Mujer" = "burlywood2", "Hombre" = "azure3"))+
   ggtitle("Probabilidad de deserci?n en funci?n del ingreso para jefes de hogar") +
   xlab("Ingreso per capita")+
-  ylab("Predicci?n")+
+  ylab("Prediccion")+
   theme_bw()
 
 ggsave(file="jefehogar.eps", width=6.5, height=4, dpi=300)
