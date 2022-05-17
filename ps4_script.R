@@ -63,8 +63,6 @@ g1 <- ggplot(data_d, aes(x=`ingreso_per_capita`, group=`deserta`, color=factor(`
   )
 
 
-ggsave(file="ingreso_den.eps", width=6.5, height=4, dpi=300)
-
 # Histograma de frecuencia de la cantidad de hermanos
 
 g2 <- ggplot(data_d, aes(x=`hermanos`, group=`deserta`, color=factor(`deserta`)))+ 
@@ -80,10 +78,6 @@ g2 <- ggplot(data_d, aes(x=`hermanos`, group=`deserta`, color=factor(`deserta`))
     labels = c("No", "Si"),
     name = "Deserta") + 
   theme(plot.title = element_text(hjust = 0.5))
-
-hermanos_den
-
-ggsave(file="hermanos_den.eps", width=6.5, height=4, dpi=300)
 
 
 # Realizamos un grafico de barras sobre el nivel educativo del jefe de 
@@ -118,46 +112,25 @@ g3 <- ggplot(data_d, mapping = aes(x = educ_lab,
   theme(legend.position = "right",
         plot.title = element_text(hjust = 0.5))
 
-
-
+# Exportamos los tres graficos en uno.
 
 library(gridExtra)
-
 grid.arrange(g1, g2, g3, nrow = 3, ncol = 1)
 
-ggsave(file="FirEpid.eps", width=6.5, height=4, dpi=300)
 
-
-
-# Realizamos un gráfico de barras sobre el tipo de instituci?n educativa a la que se asiste seg?n la variable deserta 
-
-counts_1 <- table(data_d$deserta, data_d$ch11)
-
-graf_est_educ <- barplot(counts_1, main="Tipo de establecimiento educativo",
-        xlab="Tipo de establecimiento educativo", ylab="Cantidad de observaciones",col=c("burlywood2", "azure3"),
-        legend.text = c("Desert?", "No desert?"), beside=TRUE)
-
-ggsave(file="tipo_educ.eps", width=6.5, height=4, dpi=300)
-
-
-# Realizamos una tabla para obtener la frecuencia de la cantidad de hombres y mujeres seg?n si desertan o no
-
-# el que est? como columna es mujer y el que est? como fila es deserta 
-
-tabla_1 <- table(data_d$deserta, data_d$`mujer`)
-tabla_2 <- prop.table(tabla_1)
-
-# Exportamos la tabla 
+# Hacemos una tabla con información sobre las varibles
 
 library(stargazer)
 
-stargazer(tabla_2, type='latex',
-          dep.var.labels=c("Deserta", "No deserta"))
+data_stuct <- data.frame(data_d)
+stargazer(data_stuct[c("deserta", "mujer",
+                       "jmujer", "ingreso_per_capita")],
+          type="latex")
 
 
 #### Punto 2 ####
 
-# Vamos a escribir la f?rmula del modelo a estimar. Primero vamos a guardar la formula dado 
+# Vamos a escribir la formula del modelo a estimar. Primero vamos a guardar la formula dado 
 # que la utilizaremos luego. 
 
 # Es importante destacar que usamos como categoria base educ_jefe_2 (primaria) para el nivel educativo 
@@ -370,31 +343,36 @@ df_final <- data.frame(
 
 # Según si el jefe es mujer u hombre
 
-ggplot()+
+jhm <- ggplot()+
   geom_line(data=df_final,aes(y=pred_jm,x= ingreso,colour="Mujer"),size=1 )+
   geom_line(data=df_final,aes(y=pred_jh,x= ingreso,colour="Hombre"),size=1) +
   scale_color_manual(name = "Jefe de hogar", values = c("Mujer" = "burlywood2", "Hombre" = "azure3"))+
-  ggtitle("Probabilidad de deserci?n en funci?n del ingreso para jefes de hogar") +
+  ggtitle("Probabilidad de desercion escolar", subtitle = "Según el sexo del jefe de hogar") +
   xlab("Ingreso per capita")+
-  ylab("Prediccion")+
-  theme_bw()
-
-ggsave(file="jefehogar.eps", width=6.5, height=4, dpi=300)
+  ylab("Probabilidad predicha")+
+  theme_bw() +
+  theme(legend.position = "bottom",
+        plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5))
 
 # Según si es hombre o mujer
 
-ggplot()+
+hm <- ggplot()+
   geom_line(data=df_final,aes(y=pred_mujer,x= ingreso,colour="Mujer"),size=1 )+
   geom_line(data=df_final,aes(y=pred_hombre,x= ingreso,colour="Hombre"),size=1) +
   scale_color_manual(name = "Sexo", values = c("Mujer" = "burlywood2", "Hombre" = "azure3"))+
-  ggtitle("Probabilidad de deserción en funcion \n del ingreso para jefes de hogar") +
+  ggtitle("Probabilidad de deserción escolar",
+          subtitle = "Según sexo del individuo") +
   xlab("Ingreso per capita") + 
-  ylab("Probabilidad")+
+  ylab("")+
   theme_bw() + 
-  theme(legend.position = "right",
-        plot.title = element_text(hjust = 0.5))
+  theme(legend.position = "bottom",
+        plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5))
 
-ggsave(file="sexo.eps", width=6.5, height=4, dpi=300)
+# Exportamos
+
+grid.arrange(jhm, hm, nrow = 1, ncol = 2)
 
 
 
@@ -402,8 +380,8 @@ ggsave(file="sexo.eps", width=6.5, height=4, dpi=300)
 
 # Estimamos el modelo que pide la consigna
 
-modelo_7 <- Formula(deserta ~ ln_ing + jmujer + mujer + educ_jefe_0 + educ_jefe_3 + educ_jefe_4 + educ_jefe_5 + 
-                      educ_jefe_6 + educ_jefe_7 + educ_jefe_8 + hermanos)
+modelo_7 <- Formula(deserta ~ jmujer + mujer + educ_jefe_0 + educ_jefe_3 + educ_jefe_4 + educ_jefe_5 + 
+                      educ_jefe_6 + educ_jefe_7 + educ_jefe_8 + hermanos + ln_ing)
 
 desercion_probit7 <- glm(modelo_7 , family = binomial(link = "probit"), 
                          data = data_d)              
