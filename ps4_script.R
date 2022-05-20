@@ -12,7 +12,7 @@
 # que vamos a exportar e importar.
 
 dir <- "/Users/Abi/Documents/GitHub/PsMetricsIV"
-dir <- "C:/Users/estef/Desktop/San Andr?s/2022/Econometr?a Avanzada/PsMetricsIV/PsMetricsIV"
+dir <- "C:/Users/estef/Desktop/San Andrés/2022/Econometria Avanzada/PsMetricsIV/PsMetricsIV"
 
 setwd(dir)
 
@@ -163,6 +163,9 @@ desercion_probit_robust
 
 #### Punto 3 #### 
 
+#install.packages("modeest")
+library(modeest)
+
 # Computaremos distintos efectos marginales
 
 # En la media 
@@ -170,7 +173,19 @@ desercion_probit_robust
 marginal_media <- probitmfx(deserta ~ mujer + educ_jefe_0 + educ_jefe_3 + educ_jefe_4 + educ_jefe_5 + 
                               educ_jefe_6 + educ_jefe_7 + educ_jefe_8 + hermanos + ingreso_per_capita + 
                               jmujer + ch11_0 + ch11_1 + ch11_9, data = data_d,
-                            atmean = TRUE, robust = TRUE) 
+                            atmean = TRUE, robust = TRUE)
+
+# Exportamos las estimaciones:
+
+stargazer(marginal_media, type='text',
+          dep.var.labels=c("Deserta"),
+          covariate.labels = c("Mujer", "Educación JH (missing)", "Educación JH (EGB)", "Educación JH (Secundario)",
+                               "Educación JH (Polimodal)", "Educación JH (Terciario)", "Educación JH (Universitario)",
+                               "Educación JH (Posgrado)",
+                               "Cantidad de hermanos", "Ingreso per cápita", "Jefe de hogar mujer",
+                               "Establecimiento educativo (missing)", 
+                               "Establecimiento educativo (público)", "Establecimiento educativo (no responde)"),
+          notes = "Robust standard errors in parentheses")
 
 # En la media para hombres y mujeres 
 
@@ -232,6 +247,9 @@ prueba4 <- margins(desercion_probit, at = list(mujer = median(data_d$mujer),
 
 # Queda armar la tabla VER 
 
+mat1.data <- c(1,2,3,4,5,6,7,8,9)
+mat1 <- matrix(mat1.data,nrow=3,ncol=3,byrow=TRUE)
+mat1
 
 #### Punto 4 ####
 
