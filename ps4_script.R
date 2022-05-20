@@ -170,20 +170,21 @@ library(modeest)
 
 # En la media 
 
+
 marginal_media <- margins(desercion_probit, at = list(mujer = 0, 
-                                               hermanos = mean(data_d$hermanos), 
-                                               educ_jefe_0 = mean(data_d$educ_jefe_0), 
-                                               educ_jefe_3 = mean(data_d$educ_jefe_3), 
-                                               educ_jefe_4 = mean(data_d$educ_jefe_4), 
-                                               educ_jefe_5 = mean(data_d$educ_jefe_5), 
-                                               educ_jefe_6 = mean(data_d$educ_jefe_6), 
-                                               educ_jefe_7 = mean(data_d$educ_jefe_7), 
-                                               educ_jefe_8 = mean(data_d$educ_jefe_8), 
-                                               ingreso_per_capita = mean(data_d$ingreso_per_capita), 
-                                               jmujer = mean(data_d$jmujer), 
-                                               ch11_0 = mean(data_d$ch11_0),
-                                               ch11_1 = mean(data_d$ch11_1),
-                                               ch11_9 = mean(data_d$ch11_9)))
+                                                      hermanos = mean(data_d$hermanos), 
+                                                      ingreso_per_capita = mean(data_d$ingreso_per_capita), 
+                                                      educ_jefe_0 = 0, 
+                                                      educ_jefe_3 = 0, 
+                                                      educ_jefe_4 = 0, 
+                                                      educ_jefe_5 = 0, 
+                                                      educ_jefe_6 = 0, 
+                                                      educ_jefe_7 = 0, 
+                                                      educ_jefe_8 = 0, 
+                                                      jmujer = 0, 
+                                                      ch11_0 = 0,
+                                                      ch11_1 = 0,
+                                                      ch11_9 = 0))
 
 # marginal_media <- probitmfx(deserta ~ mujer + educ_jefe_0 + educ_jefe_3 + educ_jefe_4 + educ_jefe_5 + 
                           #    educ_jefe_6 + educ_jefe_7 + educ_jefe_8 + hermanos + ingreso_per_capita + 
@@ -197,64 +198,63 @@ prueba1 <- margins(desercion_probit, at = list(mujer = 0:1))
 # En la mediana 
 
 prueba2 <- margins(desercion_probit, at = list(mujer = 0, 
-                                               hermanos = median(data_d$hermanos), 
-                                               educ_jefe_0 = median(data_d$educ_jefe_0), 
-                                               educ_jefe_3 = median(data_d$educ_jefe_3), 
-                                               educ_jefe_4 = median(data_d$educ_jefe_4), 
-                                               educ_jefe_5 = median(data_d$educ_jefe_5), 
-                                               educ_jefe_6 = median(data_d$educ_jefe_6), 
-                                               educ_jefe_7 = median(data_d$educ_jefe_7), 
-                                               educ_jefe_8 = median(data_d$educ_jefe_8), 
-                                               ingreso_per_capita = median(data_d$ingreso_per_capita), 
-                                               jmujer = median(data_d$jmujer), 
-                                               ch11_0 = median(data_d$ch11_0),
-                                               ch11_1 = median(data_d$ch11_1),
-                                               ch11_9 = median(data_d$ch11_9)))
+                                               hermanos = median(data_d$hermanos),
+                                               ingreso_per_capita = median(data_d$ingreso_per_capita),
+                                               educ_jefe_0 = 0, 
+                                               educ_jefe_3 = 0, 
+                                               educ_jefe_4 = 0, 
+                                               educ_jefe_5 = 0, 
+                                               educ_jefe_6 = 0, 
+                                               educ_jefe_7 = 0, 
+                                               educ_jefe_8 = 0, 
+                                               jmujer = 0, 
+                                               ch11_0 = 0,
+                                               ch11_1 = 0,
+                                               ch11_9 = 0))
 
 # En la moda
 
-prueba3 <- margins(desercion_probit, at = list(mujer = mfv(data_d$mujer),
+prueba3 <- margins(desercion_probit, at = list(mujer = 0,
                                        hermanos = mfv(data_d$hermanos), 
                                        ingreso_per_capita = mfv(data_d$ingreso_per_capita), 
-                                       educ_jefe_0 = mfv(data_d$educ_jefe_0), 
-                                       educ_jefe_3 = mfv(data_d$educ_jefe_3), 
-                                       educ_jefe_4 = mfv(data_d$educ_jefe_4),
-                                       educ_jefe_5 = mfv(data_d$educ_jefe_5), 
-                                       educ_jefe_6 = mfv(data_d$educ_jefe_6),
-                                       educ_jefe_7 = mfv(data_d$educ_jefe_7),
-                                       educ_jefe_8 = mfv(data_d$educ_jefe_8),
-                                       jmujer = mfv(data_d$jmujer), 
-                                       ch11_0 = mfv(data_d$ch11_0),
-                                       ch11_1 = mfv(data_d$ch11_1),
-                                       ch11_9 = mfv(data_d$ch11_9)))
+                                       educ_jefe_0 = 0, 
+                                       educ_jefe_3 = 0, 
+                                       educ_jefe_4 = 0,
+                                       educ_jefe_5 = 0, 
+                                       educ_jefe_6 = 0,
+                                       educ_jefe_7 = 0,
+                                       educ_jefe_8 = 0,
+                                       jmujer = 0, 
+                                       ch11_0 = 0,
+                                       ch11_1 = 0,
+                                       ch11_9 = 0))
 
 # En valores especificos (minimo ingreso, minima educacion del jefe de hogar, minima cantidad de hermanos)
 
-prueba4 <- margins(desercion_probit, at = list(mujer = median(data_d$mujer),
+prueba4 <- margins(desercion_probit, at = list(mujer = 0,
                                        hermanos = min(data_d$hermanos),
                                        ingreso_per_capita = min(data_d$ingreso_per_capita), 
-                                       educ_jefe_0 = median(data_d$educ_jefe_0),
-                                       educ_jefe_3 = median(data_d$educ_jefe_3), 
-                                       educ_jefe_4 = median(data_d$educ_jefe_4), 
-                                       educ_jefe_5 = median(data_d$educ_jefe_5), 
-                                       educ_jefe_6 = median(data_d$educ_jefe_6),
-                                       educ_jefe_7 = median(data_d$educ_jefe_7),
-                                       educ_jefe_8 = median(data_d$educ_jefe_8),
-                                       jmujer = median(data_d$jmujer),
-                                       ch11_0 = median(data_d$ch11_0), 
-                                       ch11_1 = median(data_d$ch11_1), 
-                                       ch11_9 = median(data_d$ch11_9)))
+                                       educ_jefe_0 = 0,
+                                       educ_jefe_3 = 0, 
+                                       educ_jefe_4 = 0, 
+                                       educ_jefe_5 = 0, 
+                                       educ_jefe_6 = 0,
+                                       educ_jefe_7 = 0,
+                                       educ_jefe_8 = 0,
+                                       jmujer = 0,
+                                       ch11_0 = 0, 
+                                       ch11_1 = 0, 
+                                       ch11_9 = 0))
 
-# Queda armar la tabla VER 
+# Armamoa la tabla 
 
-# Acá debería armar la tabla pero no se por qué hace tablas raras y largas
-
-stargazer(marginal_media, prueba2, prueba3, prueba4, type='latex',
-          dep.var.labels=c("Deserta", "Deserta", "Deserta", "Deserta"),
-          covariate.labels = c("Mujer", "Educación JH (missing)", "Educación JH (EGB)", "Educación JH (Secundario)",
+stargazer(marginal_media, prueba1, prueba2, prueba3, prueba4, type='text',
+          dep.var.labels=c("Deserta", "Deserta", "Deserta", "Deserta", "Deserta"),
+          covariate.labels = c("Mujer", "Cantidad de hermanos", "Ingreso per cápita", 
+                               "Educación JH (missing)", "Educación JH (EGB)", "Educación JH (Secundario)",
                                "Educación JH (Polimodal)", "Educación JH (Terciario)", "Educación JH (Universitario)",
                                "Educación JH (Posgrado)",
-                               "Cantidad de hermanos", "Ingreso per cápita", "Jefe de hogar mujer",
+                               "Jefe de hogar mujer",
                                "Establecimiento educativo (missing)", 
                                "Establecimiento educativo (público)", "Establecimiento educativo (no responde)"))
 
