@@ -12,7 +12,7 @@
 # que vamos a exportar e importar.
 
 dir <- "/Users/Abi/Documents/GitHub/PsMetricsIV"
-dir <- "C:/Users/estef/Desktop/San Andrés/2022/Econometria Avanzada/PsMetricsIV/PsMetricsIV"
+dir <- "C:/Users/estef/Desktop/San Andrés/2022/Econometría Avanzada/PsMetricsIV/PsMetricsIV"
 
 setwd(dir)
 
@@ -170,10 +170,25 @@ library(modeest)
 
 # En la media 
 
-marginal_media <- probitmfx(deserta ~ mujer + educ_jefe_0 + educ_jefe_3 + educ_jefe_4 + educ_jefe_5 + 
-                              educ_jefe_6 + educ_jefe_7 + educ_jefe_8 + hermanos + ingreso_per_capita + 
-                              jmujer + ch11_0 + ch11_1 + ch11_9, data = data_d,
-                            atmean = TRUE, robust = TRUE)
+marginal_media <- margins(desercion_probit, at = list(mujer = 0, 
+                                    hermanos = mean(data_d$hermanos), 
+                                    educ_jefe_0 = mean(data_d$educ_jefe_0), 
+                                    educ_jefe_3 = mean(data_d$educ_jefe_3), 
+                                    educ_jefe_4 = mean(data_d$educ_jefe_4), 
+                                    educ_jefe_5 = mean(data_d$educ_jefe_5), 
+                                    educ_jefe_6 = mean(data_d$educ_jefe_6), 
+                                    educ_jefe_7 = mean(data_d$educ_jefe_7), 
+                                    educ_jefe_8 = mean(data_d$educ_jefe_8), 
+                                    ingreso_per_capita = mean(data_d$ingreso_per_capita), 
+                                    jmujer = mean(data_d$jmujer), 
+                                    ch11_0 = mean(data_d$ch11_0),
+                                    ch11_1 = mean(data_d$ch11_1),
+                                    ch11_9 = mean(data_d$ch11_9)))
+
+# marginal_media <- probitmfx(deserta ~ mujer + educ_jefe_0 + educ_jefe_3 + educ_jefe_4 + educ_jefe_5 + 
+                              # educ_jefe_6 + educ_jefe_7 + educ_jefe_8 + hermanos + ingreso_per_capita + 
+                              # jmujer + ch11_0 + ch11_1 + ch11_9, data = data_d,
+                              # atmean = TRUE, robust = TRUE)
 
 # Exportamos las estimaciones:
 
