@@ -190,17 +190,6 @@ marginal_media <- margins(desercion_probit, at = list(mujer = 0,
                               # jmujer + ch11_0 + ch11_1 + ch11_9, data = data_d,
                               # atmean = TRUE, robust = TRUE)
 
-# Exportamos las estimaciones:
-
-stargazer(marginal_media, type='text',
-          dep.var.labels=c("Deserta"),
-          covariate.labels = c("Mujer", "Educación JH (missing)", "Educación JH (EGB)", "Educación JH (Secundario)",
-                               "Educación JH (Polimodal)", "Educación JH (Terciario)", "Educación JH (Universitario)",
-                               "Educación JH (Posgrado)",
-                               "Cantidad de hermanos", "Ingreso per cápita", "Jefe de hogar mujer",
-                               "Establecimiento educativo (missing)", 
-                               "Establecimiento educativo (público)", "Establecimiento educativo (no responde)"),
-          notes = "Robust standard errors in parentheses")
 
 # En la media para hombres y mujeres 
 
@@ -259,9 +248,14 @@ prueba4 <- margins(desercion_probit, at = list(mujer = median(data_d$mujer),
 
 # Queda armar la tabla VER 
 
-mat1.data <- c(1,2,3,4,5,6,7,8,9)
-mat1 <- matrix(mat1.data,nrow=3,ncol=3,byrow=TRUE)
-mat1
+stargazer(marginal_media, prueba1, prueba2, prueba3, prueba4, type='text',
+          dep.var.labels=c("Deserta", "Deserta", "Deserta", "Deserta", "Deserta"),
+          covariate.labels = c("Mujer", "Educación JH (missing)", "Educación JH (EGB)", "Educación JH (Secundario)",
+                               "Educación JH (Polimodal)", "Educación JH (Terciario)", "Educación JH (Universitario)",
+                               "Educación JH (Posgrado)",
+                               "Cantidad de hermanos", "Ingreso per cápita", "Jefe de hogar mujer",
+                               "Establecimiento educativo (missing)", 
+                               "Establecimiento educativo (público)", "Establecimiento educativo (no responde)"))
 
 #### Punto 4 ####
 
