@@ -12,7 +12,7 @@
 # que vamos a exportar e importar.
 
 dir <- "/Users/Abi/Documents/GitHub/PsMetricsIV"
-dir <- "C:/Users/estef/Desktop/San Andrés/2022/Econometria Avanzada/PsMetricsIV/PsMetricsIV"
+dir <- "C:/Users/estef/Desktop/San Andrés/2022/Econometría Avanzada/PsMetricsIV/PsMetricsIV"
 
 setwd(dir)
 
@@ -170,22 +170,25 @@ library(modeest)
 
 # En la media 
 
-marginal_media <- probitmfx(deserta ~ mujer + educ_jefe_0 + educ_jefe_3 + educ_jefe_4 + educ_jefe_5 + 
-                              educ_jefe_6 + educ_jefe_7 + educ_jefe_8 + hermanos + ingreso_per_capita + 
-                              jmujer + ch11_0 + ch11_1 + ch11_9, data = data_d,
-                            atmean = TRUE, robust = TRUE)
+marginal_media <- margins(desercion_probit, at = list(mujer = 0, 
+                                               hermanos = mean(data_d$hermanos), 
+                                               educ_jefe_0 = mean(data_d$educ_jefe_0), 
+                                               educ_jefe_3 = mean(data_d$educ_jefe_3), 
+                                               educ_jefe_4 = mean(data_d$educ_jefe_4), 
+                                               educ_jefe_5 = mean(data_d$educ_jefe_5), 
+                                               educ_jefe_6 = mean(data_d$educ_jefe_6), 
+                                               educ_jefe_7 = mean(data_d$educ_jefe_7), 
+                                               educ_jefe_8 = mean(data_d$educ_jefe_8), 
+                                               ingreso_per_capita = mean(data_d$ingreso_per_capita), 
+                                               jmujer = mean(data_d$jmujer), 
+                                               ch11_0 = mean(data_d$ch11_0),
+                                               ch11_1 = mean(data_d$ch11_1),
+                                               ch11_9 = mean(data_d$ch11_9)))
 
-# Exportamos las estimaciones:
-
-stargazer(marginal_media, type='text',
-          dep.var.labels=c("Deserta"),
-          covariate.labels = c("Mujer", "Educación JH (missing)", "Educación JH (EGB)", "Educación JH (Secundario)",
-                               "Educación JH (Polimodal)", "Educación JH (Terciario)", "Educación JH (Universitario)",
-                               "Educación JH (Posgrado)",
-                               "Cantidad de hermanos", "Ingreso per cápita", "Jefe de hogar mujer",
-                               "Establecimiento educativo (missing)", 
-                               "Establecimiento educativo (público)", "Establecimiento educativo (no responde)"),
-          notes = "Robust standard errors in parentheses")
+# marginal_media <- probitmfx(deserta ~ mujer + educ_jefe_0 + educ_jefe_3 + educ_jefe_4 + educ_jefe_5 + 
+                          #    educ_jefe_6 + educ_jefe_7 + educ_jefe_8 + hermanos + ingreso_per_capita + 
+                          #   jmujer + ch11_0 + ch11_1 + ch11_9, data = data_d,
+                          #  atmean = TRUE, robust = TRUE)
 
 # En la media para hombres y mujeres 
 
@@ -244,20 +247,32 @@ prueba4 <- margins(desercion_probit, at = list(mujer = median(data_d$mujer),
 
 # Queda armar la tabla VER 
 
-<<<<<<< HEAD
-stargazer(marginal_media, prueba1, prueba2, prueba3, prueba4, type='latex',
-          dep.var.labels=c("Deserta", "Deserta", "Deserta", "Deserta", "Deserta"),
+# Acá debería armar la tabla pero no se por qué hace tablas raras y largas
+
+stargazer(marginal_media, prueba2, prueba3, prueba4, type='latex',
+          dep.var.labels=c("Deserta", "Deserta", "Deserta", "Deserta"),
           covariate.labels = c("Mujer", "Educación JH (missing)", "Educación JH (EGB)", "Educación JH (Secundario)",
                                "Educación JH (Polimodal)", "Educación JH (Terciario)", "Educación JH (Universitario)",
                                "Educación JH (Posgrado)",
                                "Cantidad de hermanos", "Ingreso per cápita", "Jefe de hogar mujer",
                                "Establecimiento educativo (missing)", 
                                "Establecimiento educativo (público)", "Establecimiento educativo (no responde)"))
-=======
-mat1.data <- c(1,2,3,4,5,6,7,8,9)
-mat1 <- matrix(mat1.data,nrow=3,ncol=3,byrow=TRUE)
-mat1
->>>>>>> 20478bce0b0dfffc1b053474f0baada9d3375cdb
+
+# Esto no se que es:
+#<<<<<<< HEAD
+# stargazer(marginal_media, prueba1, prueba2, prueba3, prueba4, type='latex',
+  #        dep.var.labels=c("Deserta", "Deserta", "Deserta", "Deserta", "Deserta"),
+   #       covariate.labels = c("Mujer", "Educación JH (missing)", "Educación JH (EGB)", "Educación JH (Secundario)",
+    #                           "Educación JH (Polimodal)", "Educación JH (Terciario)", "Educación JH (Universitario)",
+     #                          "Educación JH (Posgrado)",
+      #                         "Cantidad de hermanos", "Ingreso per cápita", "Jefe de hogar mujer",
+       #                        "Establecimiento educativo (missing)", 
+        #                       "Establecimiento educativo (público)", "Establecimiento educativo (no responde)"))
+#=======
+#mat1.data <- c(1,2,3,4,5,6,7,8,9)
+#mat1 <- matrix(mat1.data,nrow=3,ncol=3,byrow=TRUE)
+#mat1
+# >>>>>>> 20478bce0b0dfffc1b053474f0baada9d3375cdb
 
 #### Punto 4 ####
 
