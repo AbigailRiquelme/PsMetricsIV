@@ -248,7 +248,7 @@ prueba4 <- margins(desercion_probit, at = list(mujer = median(data_d$mujer),
 
 # Queda armar la tabla VER 
 
-stargazer(marginal_media, prueba1, prueba2, prueba3, prueba4, type='text',
+stargazer(marginal_media, prueba1, prueba2, prueba3, prueba4, type='latex',
           dep.var.labels=c("Deserta", "Deserta", "Deserta", "Deserta", "Deserta"),
           covariate.labels = c("Mujer", "Educación JH (missing)", "Educación JH (EGB)", "Educación JH (Secundario)",
                                "Educación JH (Polimodal)", "Educación JH (Terciario)", "Educación JH (Universitario)",
