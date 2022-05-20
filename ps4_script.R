@@ -193,8 +193,7 @@ prueba1 <- margins(desercion_probit, at = list(mujer = 0:1))
 
 # En la mediana 
 
-prueba2 <- margins(desercion_probit, at = list(mujer = median(data_d$mujer), 
-                                               educ_jefe = median(data_d$educ_jefe), 
+prueba2 <- margins(desercion_probit, at = list(mujer = 0, 
                                                hermanos = median(data_d$hermanos), 
                                                educ_jefe_0 = median(data_d$educ_jefe_0), 
                                                educ_jefe_3 = median(data_d$educ_jefe_3), 
@@ -212,7 +211,6 @@ prueba2 <- margins(desercion_probit, at = list(mujer = median(data_d$mujer),
 # En la moda
 
 prueba3 <- margins(desercion_probit, at = list(mujer = mfv(data_d$mujer),
-                                               educ_jefe = mfv(data_d$educ_jefe), 
                                        hermanos = mfv(data_d$hermanos), 
                                        ingreso_per_capita = mfv(data_d$ingreso_per_capita), 
                                        educ_jefe_0 = mfv(data_d$educ_jefe_0), 
@@ -230,7 +228,6 @@ prueba3 <- margins(desercion_probit, at = list(mujer = mfv(data_d$mujer),
 # En valores especificos (minimo ingreso, minima educacion del jefe de hogar, minima cantidad de hermanos)
 
 prueba4 <- margins(desercion_probit, at = list(mujer = median(data_d$mujer),
-                                               educ_jefe = min(data_d$educ_jefe), 
                                        hermanos = min(data_d$hermanos),
                                        ingreso_per_capita = min(data_d$ingreso_per_capita), 
                                        educ_jefe_0 = median(data_d$educ_jefe_0),
