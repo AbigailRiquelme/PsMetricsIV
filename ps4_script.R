@@ -30,7 +30,7 @@ data_d1 <- dummy_cols(data, select_columns = "ch11")
 
 # Lo mismo para las categorias de educacion del jefe/a de hogar
 
-data_d1 <- dummy_cols(data_d, select_columns = "educ_jefe")
+data_d1 <- dummy_cols(data_d1, select_columns = "educ_jefe")
 
 
 # Eliminamos las observaciones para las cuales el ingreso per c?pita es cero 
@@ -186,18 +186,15 @@ marginal_media <- margins(desercion_probit, at = list(mujer = 0,
                                                       ch11_1 = 0,
                                                       ch11_9 = 0))
 
-# marginal_media <- probitmfx(deserta ~ mujer + educ_jefe_0 + educ_jefe_3 + educ_jefe_4 + educ_jefe_5 + 
-                          #    educ_jefe_6 + educ_jefe_7 + educ_jefe_8 + hermanos + ingreso_per_capita + 
-                          #   jmujer + ch11_0 + ch11_1 + ch11_9, data = data_d,
-                          #  atmean = TRUE, robust = TRUE)
 
-# En la media para hombres y mujeres 
 
-prueba1 <- margins(desercion_probit, at = list(mujer = 0:1))
+
+c1 <- as.matrix(marginal_media[1,38:51])
+
 
 # En la mediana 
 
-prueba2 <- margins(desercion_probit, at = list(mujer = 0, 
+marginal_median <- margins(desercion_probit, at = list(mujer = 0, 
                                                hermanos = median(data_d$hermanos),
                                                ingreso_per_capita = median(data_d$ingreso_per_capita),
                                                educ_jefe_0 = 0, 
@@ -212,9 +209,12 @@ prueba2 <- margins(desercion_probit, at = list(mujer = 0,
                                                ch11_1 = 0,
                                                ch11_9 = 0))
 
+c2 <- as.matrix(marginal_median[1,38:51])
+
+
 # En la moda
 
-prueba3 <- margins(desercion_probit, at = list(mujer = 0,
+marginal_mfv <- margins(desercion_probit, at = list(mujer = 0,
                                        hermanos = mfv(data_d$hermanos), 
                                        ingreso_per_capita = mfv(data_d$ingreso_per_capita), 
                                        educ_jefe_0 = 0, 
@@ -229,9 +229,13 @@ prueba3 <- margins(desercion_probit, at = list(mujer = 0,
                                        ch11_1 = 0,
                                        ch11_9 = 0))
 
+
+c3 <- as.matrix(marginal_mfv[1,38:51])
+
+
 # En valores especificos (minimo ingreso, minima educacion del jefe de hogar, minima cantidad de hermanos)
 
-prueba4 <- margins(desercion_probit, at = list(mujer = 0,
+marginal_1 <- margins(desercion_probit, at = list(mujer = 0,
                                        hermanos = min(data_d$hermanos),
                                        ingreso_per_capita = min(data_d$ingreso_per_capita), 
                                        educ_jefe_0 = 0,
@@ -246,33 +250,40 @@ prueba4 <- margins(desercion_probit, at = list(mujer = 0,
                                        ch11_1 = 0, 
                                        ch11_9 = 0))
 
-# Armamoa la tabla 
+c4 <- as.matrix(marginal_1[1,38:51])
 
-stargazer(marginal_media, prueba1, prueba2, prueba3, prueba4, type='text',
-          dep.var.labels=c("Deserta", "Deserta", "Deserta", "Deserta", "Deserta"),
-          covariate.labels = c("Mujer", "Cantidad de hermanos", "Ingreso per c醦ita", 
-                               "Educaci髇 JH (missing)", "Educaci髇 JH (EGB)", "Educaci髇 JH (Secundario)",
-                               "Educaci髇 JH (Polimodal)", "Educaci髇 JH (Terciario)", "Educaci髇 JH (Universitario)",
-                               "Educaci髇 JH (Posgrado)",
-                               "Jefe de hogar mujer",
-                               "Establecimiento educativo (missing)", 
-                               "Establecimiento educativo (p鷅lico)", "Establecimiento educativo (no responde)"))
 
-# Esto no se que es:
-#<<<<<<< HEAD
-# stargazer(marginal_media, prueba1, prueba2, prueba3, prueba4, type='latex',
-  #        dep.var.labels=c("Deserta", "Deserta", "Deserta", "Deserta", "Deserta"),
-   #       covariate.labels = c("Mujer", "Educaci髇 JH (missing)", "Educaci髇 JH (EGB)", "Educaci髇 JH (Secundario)",
-    #                           "Educaci髇 JH (Polimodal)", "Educaci髇 JH (Terciario)", "Educaci髇 JH (Universitario)",
-     #                          "Educaci髇 JH (Posgrado)",
-      #                         "Cantidad de hermanos", "Ingreso per c醦ita", "Jefe de hogar mujer",
-       #                        "Establecimiento educativo (missing)", 
-        #                       "Establecimiento educativo (p鷅lico)", "Establecimiento educativo (no responde)"))
-#=======
-#mat1.data <- c(1,2,3,4,5,6,7,8,9)
-#mat1 <- matrix(mat1.data,nrow=3,ncol=3,byrow=TRUE)
-#mat1
-# >>>>>>> 20478bce0b0dfffc1b053474f0baada9d3375cdb
+
+tabla <- matrix(data = NA, nrow = 5, ncol = 15)
+
+
+tabla[2,2:15] <- c1
+tabla[3,2:15] <- c2
+tabla[4,2:15] <- c3
+tabla[5,2:15] <- c4
+
+tabla <- round(tabla,3)
+
+tabla[1,1:15] <- c("Efecto marginal","Mujer", "Missing", "EGB", "Secundario", "Polimodal", "Terciario",
+             "Universitario", "Posgrado", "Hermanos", "Ingreso PC", "Jefa de hogar", 
+             "Missing", "Publico", "No responde")
+
+
+tabla[2:5,1] <- c("Media", "Mediana", "Moda", "Caso particular")
+
+tabla2 <- matrix(data = NA, nrow = 10, ncol = 20)
+
+tabla2[1:5, 1:8] <- tabla[1:5, 1:8]
+
+tabla2[7:10,1] <- c("Media", "Mediana", "Moda", "Caso particular")
+
+tabla2[7:10, 2:9] <- tabla[1:5, 9:15]
+
+# Exportamos la tabla
+
+stargazer(tabla,  type='latex')
+
+
 
 #### Punto 4 ####
 
@@ -441,7 +452,7 @@ exp(-ratio)-1
 
 # Exportamos las estimaciones:
 
-stargazer(desercion_probit_robust, desercion_mlp_robust, desercion_probit7, type='text',
+stargazer(desercion_probit_robust, desercion_mlp_robust, desercion_probit7, type='tex',
           dep.var.labels=c("Deserta", "Deserta", "Deserta"),
           covariate.labels = c("Mujer", "Educaci髇 JH (missing)", "Educaci贸n JH (EGB)", "Educaci贸n JH (Secundario)",
                                "Educaci贸n JH (Polimodal)", "Educaci贸n JH (Terciario)", "Educaci贸n JH (Universitario)",
