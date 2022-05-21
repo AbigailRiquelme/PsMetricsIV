@@ -253,7 +253,6 @@ marginal_1 <- margins(desercion_probit, at = list(mujer = 0,
 c4 <- as.matrix(marginal_1[1,38:51])
 
 
-
 tabla <- matrix(data = NA, nrow = 5, ncol = 15)
 
 
@@ -271,17 +270,28 @@ tabla[1,1:15] <- c("Efecto marginal","Mujer", "Missing", "EGB", "Secundario", "P
 
 tabla[2:5,1] <- c("Media", "Mediana", "Moda", "Caso particular")
 
-tabla2 <- matrix(data = NA, nrow = 10, ncol = 20)
+tabla2 <- matrix(data = NA, nrow = 10, ncol = 8)
 
-tabla2[1:5, 1:8] <- tabla[1:5, 1:8]
+tabla2[1,1] <- c("Efecto marginal")
+
+tabla2[2:5,1] <- c("Media", "Mediana", "Moda", "Caso particular")
+
+tabla2[6,1] <- c("Efecto marginal")
 
 tabla2[7:10,1] <- c("Media", "Mediana", "Moda", "Caso particular")
 
-tabla2[7:10, 2:9] <- tabla[1:5, 9:15]
+tabla2[1,2:8] <- c("Mujer", "Missing", "EGB", "Secundario", "Polimodal", "Terciario",
+                   "Universitario")
+
+tabla2[2:5, 2:8] <- tabla[2:5, 2:8]
+
+tabla2[6, 2:8] <- c("Posgrado", "Hermanos", "Ingreso PC", "Jefa de hogar", "Missing", "Publico", "No responde")
+
+tabla2[7:10, 2:8] <- tabla[2:5, 9:15]
 
 # Exportamos la tabla
 
-stargazer(tabla,  type='latex')
+stargazer(tabla2,  type='latex')
 
 
 
