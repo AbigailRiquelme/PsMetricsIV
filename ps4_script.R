@@ -11,13 +11,10 @@
 # Antes de comenzar vamos a definir el directorio en el que guardaremos las bases 
 # que vamos a exportar e importar.
 
-dir <- "/Users/Abi/Documents/GitHub/PsMetricsIV"
-dir <- "C:/Users/estef/Desktop/San Andr閟/2022/Econometr韆 Avanzada/PsMetricsIV/PsMetricsIV"
-
+dir <- ""
 setwd(dir)
 
 library(haven)
-data <- read_dta("https://econometriaudesa.weebly.com/uploads/1/3/6/3/136372338/cuarto_trim_2019.dta")
 data <- read_dta("cuarto_trim_2019.dta")
 
 #### Punto 1 ####
@@ -31,7 +28,6 @@ data_d1 <- dummy_cols(data, select_columns = "ch11")
 # Lo mismo para las categorias de educacion del jefe/a de hogar
 
 data_d1 <- dummy_cols(data_d1, select_columns = "educ_jefe")
-
 
 # Eliminamos las observaciones para las cuales el ingreso per c?pita es cero 
 
@@ -186,11 +182,7 @@ marginal_media <- margins(desercion_probit, at = list(mujer = 0,
                                                       ch11_1 = 0,
                                                       ch11_9 = 0))
 
-
-
-
 c1 <- as.matrix(marginal_media[1,38:51])
-
 
 # En la mediana 
 
@@ -211,7 +203,6 @@ marginal_median <- margins(desercion_probit, at = list(mujer = 0,
 
 c2 <- as.matrix(marginal_median[1,38:51])
 
-
 # En la moda
 
 marginal_mfv <- margins(desercion_probit, at = list(mujer = 0,
@@ -229,9 +220,7 @@ marginal_mfv <- margins(desercion_probit, at = list(mujer = 0,
                                        ch11_1 = 0,
                                        ch11_9 = 0))
 
-
 c3 <- as.matrix(marginal_mfv[1,38:51])
-
 
 # En valores especificos (minimo ingreso, minima educacion del jefe de hogar, minima cantidad de hermanos)
 
@@ -252,10 +241,7 @@ marginal_1 <- margins(desercion_probit, at = list(mujer = 0,
 
 c4 <- as.matrix(marginal_1[1,38:51])
 
-
 tabla <- matrix(data = NA, nrow = 5, ncol = 15)
-
-
 tabla[2,2:15] <- c1
 tabla[3,2:15] <- c2
 tabla[4,2:15] <- c3
@@ -269,31 +255,20 @@ tabla[1,1:15] <- c("Efecto marginal","Mujer", "Missing", "EGB", "Secundario", "P
 
 
 tabla[2:5,1] <- c("Media", "Mediana", "Moda", "Caso particular")
-
 tabla2 <- matrix(data = NA, nrow = 10, ncol = 8)
-
 tabla2[1,1] <- c("Efecto marginal")
-
 tabla2[2:5,1] <- c("Media", "Mediana", "Moda", "Caso particular")
-
 tabla2[6,1] <- c("Efecto marginal")
-
 tabla2[7:10,1] <- c("Media", "Mediana", "Moda", "Caso particular")
-
 tabla2[1,2:8] <- c("Mujer", "Missing", "EGB", "Secundario", "Polimodal", "Terciario",
                    "Universitario")
-
 tabla2[2:5, 2:8] <- tabla[2:5, 2:8]
-
 tabla2[6, 2:8] <- c("Posgrado", "Hermanos", "Ingreso PC", "Jefa de hogar", "Missing", "Publico", "No responde")
-
 tabla2[7:10, 2:8] <- tabla[2:5, 9:15]
 
 # Exportamos la tabla
 
 stargazer(tabla2,  type='latex')
-
-
 
 #### Punto 4 ####
 
@@ -310,7 +285,6 @@ desercion_mlp <- lm(modelo_desercion, data = data_d)
 
 desercion_mlp_robust <- coeftest(desercion_mlp, vcov = vcovHC(desercion_mlp, "HC1"))  
 
-
 #### Punto 5 #### 
 
 # Reemplazamos las osbervaciones que tienen ingreso igual a cero con un ingreso 
@@ -322,7 +296,6 @@ data_d1$ingreso_per_capita[data_d1$ingreso_per_capita==0] <- 1
 # Generamos la nueva variabl
 
 data_d1$ln_ing <- log(data_d1$ingreso_per_capita)
-
 
 #### Punto 6 #### 
 
@@ -459,12 +432,11 @@ desercion_probit7_robust <- coeftest(desercion_probit7, vcov = vcovHC(desercion_
 ratio = desercion_probit7$coefficients[2]/desercion_probit7$coefficients[12]
 exp(-ratio)-1
 
-
 # Exportamos las estimaciones:
 
 stargazer(desercion_probit_robust, desercion_mlp_robust, desercion_probit7, type='tex',
           dep.var.labels=c("Deserta", "Deserta", "Deserta"),
-          covariate.labels = c("Mujer", "Educaci髇 JH (missing)", "Educaci贸n JH (EGB)", "Educaci贸n JH (Secundario)",
+          covariate.labels = c("Mujer", "Educaci?n JH (missing)", "Educaci贸n JH (EGB)", "Educaci贸n JH (Secundario)",
                                "Educaci贸n JH (Polimodal)", "Educaci贸n JH (Terciario)", "Educaci贸n JH (Universitario)",
                                "Educaci贸n JH (Posgrado)",
                                "Cantidad de hermanos", "Ingreso per c谩pita","Log ingreso per capita", "Jefe de hogar mujer",
@@ -472,8 +444,5 @@ stargazer(desercion_probit_robust, desercion_mlp_robust, desercion_probit7, type
                                "Establecimiento educativo (p煤blico)", "Establecimiento educativo (no responde)"),
           notes = "Robust standard errors in parentheses", 
           add.lines=list(c("Modelo", "Probit", "MLP", "Probit")))
-
-
-
 
 
